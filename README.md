@@ -11,7 +11,9 @@ Aplicación de catálogo y seguimiento de videojuegos. El repositorio contiene u
 - `src/main/resources/db/migration/`: migraciones SQL de Flyway.
 - `src/main/resources/application.yml`: configuración de Spring mediante variables de entorno.
 - `docker-compose.yml`: PostgreSQL y Redis para desarrollo local.
-- `index.html`: maqueta estática independiente, no equivale a la aplicación integrada.
+- `docs/index.html`: preview estático publicado en GitHub Pages; no equivale a la aplicación integrada.
+
+**Preview:** https://tzayadet.github.io/GameTracker/
 
 ## Stack
 
