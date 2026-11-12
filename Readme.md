@@ -1,77 +1,48 @@
 # GameTracker
 
-Backend en Spring Boot + frontend en React/Tauri para gestionar listas de juegos, ratings, clanes y búsqueda de compañeros para coop. Incluye matchmaking con Redis, invites con token y logs de auditoría.
+Prototipo de catálogo y seguimiento de videojuegos. El repositorio contiene una interfaz React/TypeScript en desarrollo y un backend Java/Spring Boot incompleto.
 
-Stack
-- Backend: Java 17, Spring Boot 3.2, Security (JWT), JPA, Redis, WebSockets (STOMP), Flyway
-- Frontend: React 18 + TS, Vite, Zustand, Tauri
-- Infra: Docker Compose (Postgres 15, Redis 7, Nginx)
+## Estado del proyecto
 
-Requisitos
-- Java 17+
-- Node 18+ / npm 9+
-- Docker y Docker Compose
-- curl o Postman para validar endpoints
+**En desarrollo. No es una aplicación desplegable de extremo a extremo todavía.**
 
-Configuración
-1. Clona el repo y entra.
-2. Copia .env.example a .env y rellena las variables:
-   JWT_SECRET= (genera uno con openssl rand -hex 32)
-   IGDB_CLIENT_ID=...
-   IGDB_CLIENT_SECRET=...
-3. Levanta servicios base:
-   docker compose up -d --build
-   Espera a que Postgres y Redis estén listos. El backend arranca automáticamente cuando detecta la DB.
-4. Backend (opcional, para debug local):
-   cd backend
-   mvn spring-boot:run
-5. Frontend:
-   cd frontend
-   npm i
-   npm run dev        (modo web)
-   npx tauri dev      (desktop nativo)
+La estructura actual incluye un frontend React/Vite, una configuración inicial de Tauri, clases Java de dominio, una API de consulta de juegos y configuración prevista para PostgreSQL, Redis y Flyway. Faltan componentes referenciados por el código y la estructura Java aún no está organizada como un proyecto Maven estándar. Por tanto, no se garantiza que `mvn package` o el despliegue con Docker funcionen en este estado.
 
-Endpoints principales
-POST /api/v1/auth/login  -> sin auth. Devuelve { "token": "..." }
-GET  /api/v1/games       -> auth requerida. Params: q, page, size. Devuelve PageResponse.
-POST /api/v1/clans/{id}/invites -> auth requerida. Solo OWNER/OFFICER. Genera token 24h.
-POST /api/v1/clans/invites/{token}/accept -> auth requerida. Une usuario al clan.
-WS   /ws/match            -> auth requerida (Bearer en STOMP CONNECT). Destinos: /app/match.join, /app/match.leave
+## Stack previsto
 
-Notas importantes
-- WebSockets: El interceptor valida el JWT en el CONNECT. Si falta o está mal, cierra la conexión. El cliente debe inyectar el header manualmente.
-- IGDB: El cliente incluye fallback de cache. Sin credenciales válidas, la sync devuelve 401. Para pruebas locales, usa el mock o comenta la llamada real.
-- Rate Limiting: Filtro a nivel servlet (150 req/min por IP). No usa Redis. Si pones un proxy como Cloudflare, desactívalo o sube el límite.
-- Paginación: El store de Zustand resetea a página 0 si cambia la búsqueda. No usa librerías externas para el control.
-- Flyway: ddl-auto está en validate. No dejes que Hibernate modifique el esquema en producción. Cualquier cambio de tablas va a db/migration.
+- Java 17 y Spring Boot
+- Spring Security y JWT
+- PostgreSQL y Flyway
+- Redis para matchmaking
+- React 18, TypeScript, Vite y Zustand
+- Tauri para escritorio
 
-Estructura rápida
-backend/src/main/java/com/zyane/gt/
-├ config/      (Redis, WS, WebClient, RateLimit)
-├ security/    (JWT, FilterChain, Interceptor WS)
-├ domain/      (Entidades JPA y Embeddables)
-├ service/     (Matchmaking, Moderation, IGDB, Library)
-├ controller/  (REST + STOMP)
-└ exception/   (Handler global + DTOs)
+## Estructura presente
 
-frontend/src/
-├ api/client.ts       (Axios + interceptor JWT)
-├ store/gameStore.ts  (Zustand + lógica de fetch)
-└ components/         (Vista base, sin librerías UI)
+- `frontend/`: cliente React/TypeScript y configuración Tauri.
+- `security/`, `controller/`, `service/`, `domain/`: fuentes Java en fase de organización.
+- `db/migration/`: migración SQL inicial.
+- `application.yml`: configuración del backend.
+- `docker-compose.yml`: infraestructura local de desarrollo.
 
-Debug común
-- 401 en rutas: token expirado o no enviado. Revisa localStorage.getItem('jwt') en el cliente.
-- WebSocket handshake fail: Nginx no pasa Upgrade/Connection. Verifica proxy_http_version 1.1 en nginx.conf.
-- Redis connection refused: Puerto 6379 ocupado o contenedor caído. docker ps y redis-cli ping.
-- Flyway migration failed: Esquema desincronizado. Borra la BD gt_main y recrea, o ajusta V1__init.sql para que coincida con las entidades.
+## Próximos hitos técnicos
 
-Estado actual
-[OK] Auth JWT + filtros REST/WS
-[OK] Paginación estable + búsqueda por título/tags
-[OK] Matchmaking ELO básico con Redis ZSET
-[OK] Invites de clan con expiración y single-use
-[OK] Auditoría básica (logs + IP)
-[PENDIENTE] IGDB sync real (requiere credenciales prod + rotación automática)
-[PENDIENTE] Panel de moderación (endpoints listos, UI sin construir)
+1. Reubicar las fuentes Java bajo `src/main/java` y completar clases DTO, servicios y repositorios ausentes.
+2. Alinear entidades JPA con la migración Flyway.
+3. Completar autenticación, registro y gestión de usuarios.
+4. Asegurar autorización por propietario en biblioteca, clanes y matchmaking.
+5. Corregir configuración JWT y orígenes permitidos para WebSocket.
+6. Añadir tests unitarios, integración y build reproducible.
+7. Implementar y probar sincronización IGDB mediante credenciales externas.
 
-Si algo falla al levantar, revisa los logs del contenedor api: docker logs -f gametracker-api-1. Todo está cableado explícitamente, sin abstracciones ocultas.
+## Configuración
+
+No hay un procedimiento de despliegue validado. No publiques secretos ni credenciales de IGDB en el repositorio. Utiliza variables de entorno y secretos del entorno de despliegue.
+
+## Seguridad
+
+El filtro JWT y el interceptor STOMP son código inicial y requieren revisión antes de cualquier despliegue. El proyecto no debe contener datos reales de usuarios ni exponerse a Internet como servicio operativo.
+
+## Licencia
+
+Consulta [LICENSE](LICENSE).
