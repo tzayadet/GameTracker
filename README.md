@@ -48,7 +48,9 @@ To run the production frontend build:
 npm run build
 ```
 
-The frontend build has not been verified as part of an integrated application release.
+The frontend now has an independent Vite build and a CI type-check. This validates the React/TypeScript client only; it does not mean that the incomplete Spring Boot backend or IGDB integration is ready.
+
+Frontend CI runs `npm install` and `npm run build` for changes under `frontend/`. During local development, Vite proxies `/api` and `/ws` to `http://127.0.0.1:8080`; set `VITE_API_URL` when using a separately hosted API.
 
 ## Local infrastructure
 
