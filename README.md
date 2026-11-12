@@ -1,5 +1,7 @@
 # GameTracker
 
+[![Backend CI](https://github.com/tzayadet/GameTracker/actions/workflows/backend-ci.yml/badge.svg)](https://github.com/tzayadet/GameTracker/actions/workflows/backend-ci.yml)
+
 Aplicación de catálogo y seguimiento de videojuegos. El repositorio contiene un frontend React/TypeScript, un backend Java 17 con Spring Boot y una infraestructura local PostgreSQL/Redis.
 
 **Estado: prototipo en desarrollo.** El proyecto ya tiene una estructura Maven estándar, migración Flyway, componentes iniciales de búsqueda de juegos y una compilación automatizada del backend. Todavía no es una aplicación completa ni está preparada para producción.
