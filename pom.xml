@@ -14,8 +14,8 @@
     <groupId>com.zyane</groupId>
     <artifactId>gametracker</artifactId>
     <version>0.1.0-SNAPSHOT</version>
-    <name>GameTracker</name>
-    <description>Game library and progress tracking application</description>
+    <name>Game Library &amp; Progress Tracker</name>
+    <description>Personal video game library and progress tracking application.</description>
 
     <properties>
         <java.version>17</java.version>
