@@ -2,7 +2,7 @@
 
 **Project:** GameTracker
 
-[![Backend CI](https://github.com/tzayadet/GameTracker/actions/workflows/backend-ci.yml/badge.svg)](https://github.com/tzayadet/GameTracker/actions/workflows/backend-ci.yml)
+[![Backend CI](https://github.com/tzayadet/GameTracker/actions/workflows/backend-ci.yml/badge.svg)](https://github.com/tzayadet/GameTracker/actions/workflows/backend-ci.yml) [![Frontend CI](https://github.com/tzayadet/GameTracker/actions/workflows/frontend-ci.yml/badge.svg)](https://github.com/tzayadet/GameTracker/actions/workflows/frontend-ci.yml) [![GitHub Pages](https://github.com/tzayadet/GameTracker/actions/workflows/static.yml/badge.svg)](https://github.com/tzayadet/GameTracker/actions/workflows/static.yml)
 
 Aplicación de biblioteca personal y seguimiento del progreso en videojuegos. El repositorio contiene un frontend React/TypeScript, un backend Java 17 con Spring Boot y una infraestructura local PostgreSQL/Redis.
 
