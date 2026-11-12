@@ -4,6 +4,9 @@ Game-library and progress-tracking application under active development. The rep
 
 **Status: prototype / incomplete.** The repository is not currently a verified end-to-end application. The frontend, backend and deployment configuration are not yet integrated into a reproducible release.
 
+**Static preview:** https://tzayadet.github.io/GameTracker/  
+This preview is not a verified release of the integrated React and Spring Boot application. Do not treat it as a production service.
+
 ## Components
 
 - `frontend/`: React 18, TypeScript, Vite and Zustand.
