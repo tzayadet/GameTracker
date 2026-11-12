@@ -1,40 +1,58 @@
 # GameTracker
 
-Game-library and progress-tracking application under active development. The repository contains a React/TypeScript frontend, an initial Java/Spring Boot backend structure and local PostgreSQL/Redis infrastructure.
+Aplicación de catálogo y seguimiento de videojuegos. El repositorio contiene un frontend React/TypeScript, un backend Java 17 con Spring Boot y una infraestructura local PostgreSQL/Redis.
 
-**Status: prototype / incomplete.** The repository is not currently a verified end-to-end application. The frontend, backend and deployment configuration are not yet integrated into a reproducible release.
+**Estado: prototipo en desarrollo.** El proyecto ya tiene una estructura Maven estándar, migración Flyway, componentes iniciales de búsqueda de juegos y una compilación automatizada del backend. Todavía no es una aplicación completa ni está preparada para producción.
 
-**Static preview:** https://tzayadet.github.io/GameTracker/  
-This preview is not a verified release of the integrated React and Spring Boot application. Do not treat it as a production service.
+## Componentes
 
-## Components
+- `frontend/`: cliente React 18, TypeScript, Vite y Zustand.
+- `src/main/java/`: backend Spring Boot, controladores, servicios, entidades, repositorios y seguridad JWT.
+- `src/main/resources/db/migration/`: migraciones SQL de Flyway.
+- `src/main/resources/application.yml`: configuración de Spring mediante variables de entorno.
+- `docker-compose.yml`: PostgreSQL y Redis para desarrollo local.
+- `index.html`: maqueta estática independiente, no equivale a la aplicación integrada.
 
-- `frontend/`: React 18, TypeScript, Vite and Zustand.
-- `controller/`, `service/`, `domain/`, `repository/`, `dto/`: Java backend source areas in progress.
-- `security/`: initial authentication and WebSocket security components.
-- `db/`: initial database migration files.
-- `docker-compose.yml`: local PostgreSQL and Redis services.
-- `application.yml`: Spring configuration and environment-variable references.
-- `index.html`: static preview entry point.
+## Stack
 
-## Technology stack
+- Java 17 y Spring Boot 3.2
+- Spring Web, WebSocket, Security, Data JPA y Validation
+- PostgreSQL 15, Redis 7 y Flyway
+- JWT (JJWT)
+- React 18, TypeScript, Vite y Zustand
+- Tauri (configuración inicial)
 
-- Java 17
-- Spring Boot 3.2
-- Spring Web, WebSocket, Security, Data JPA and WebFlux
-- PostgreSQL 15
-- Redis 7
-- Flyway
-- JWT
-- React 18
-- TypeScript
-- Vite
-- Zustand
-- Tauri configuration
+## Requisitos
 
-## Frontend development
+- JDK 17
+- Maven 3.9+
+- Node.js LTS y npm
+- Docker Engine o Docker Desktop
 
-Requirements: Node.js and npm.
+## Backend local
+
+1. Copia `.env.example` a `.env` y configura una clave JWT aleatoria de al menos 32 bytes. No subas el archivo `.env`.
+2. Inicia la infraestructura:
+
+```bash
+docker compose up -d db redis
+```
+
+3. Exporta las variables de entorno de `.env` en tu terminal y ejecuta:
+
+```bash
+mvn spring-boot:run
+```
+
+La migración de Flyway se ejecuta al iniciar. El backend todavía no incorpora el flujo completo de registro/inicio de sesión ni la integración funcional con IGDB; por tanto, la API protegida no representa aún un producto utilizable de extremo a extremo.
+
+Para verificar el proyecto:
+
+```bash
+mvn --batch-mode clean verify
+```
+
+## Frontend
 
 ```bash
 cd frontend
@@ -42,56 +60,42 @@ npm install
 npm run dev
 ```
 
-To run the production frontend build:
+Build de producción:
 
 ```bash
 npm run build
 ```
 
-The frontend now has an independent Vite build and a CI type-check. This validates the React/TypeScript client only; it does not mean that the incomplete Spring Boot backend or IGDB integration is ready.
+Durante el desarrollo, Vite utiliza el proxy configurado para API y WebSocket. Configura `VITE_API_URL` si el backend se ejecuta en otro origen.
 
-Frontend CI runs `npm install` and `npm run build` for changes under `frontend/`. During local development, Vite proxies `/api` and `/ws` to `http://127.0.0.1:8080`; set `VITE_API_URL` when using a separately hosted API.
+## Seguridad y configuración
 
-## Local infrastructure
+Variables principales:
 
-Docker Compose starts PostgreSQL and Redis bound to loopback:
-
-```bash
-docker compose up -d db redis
-```
-
-The Compose file contains development-only database credentials. Do not reuse them outside a local disposable environment. Change credentials before any shared deployment.
-
-## Backend configuration
-
-The current Spring configuration expects environment variables for database access, JWT signing and IGDB integration:
-
-- `DB_HOST`
-- `DB_USER`
-- `DB_PASS`
-- `JWT_SECRET`
-- `IGDB_CLIENT`
-- `IGDB_SECRET`
+- `DB_HOST`, `DB_USER`, `DB_PASS`
 - `REDIS_HOST`
+- `JWT_SECRET`
+- `CORS_ALLOWED_ORIGINS`
+- `IGDB_CLIENT`, `IGDB_SECRET`
 
-Do not commit real secrets or API credentials. The backend project structure and Maven descriptor still require completion before a reproducible backend build can be documented.
+CORS y WebSocket usan una lista explícita de orígenes permitidos. En producción debe configurarse con los dominios reales. Las credenciales incluidas en Docker Compose son exclusivamente locales y deben cambiarse antes de cualquier entorno compartido.
 
-## Known work remaining
+No expongas el prototipo a Internet ni introduzcas datos reales de usuarios. La autenticación, autorización, gestión de sesiones, rate limiting, protección WebSocket, auditoría y tratamiento de errores requieren pruebas de seguridad antes de producción.
 
-1. Complete the Maven project descriptor and standard Java source layout.
-2. Resolve missing classes and align package declarations.
-3. Align JPA entities with Flyway migrations.
-4. Complete authentication, authorization and ownership checks.
-5. Validate JWT configuration and WebSocket origin restrictions.
-6. Implement and test IGDB integration.
-7. Add automated tests and a reproducible CI build.
-8. Integrate frontend and backend with a documented API contract.
-9. Verify Docker deployment and production configuration.
+## Trabajo pendiente
 
-## Security notes
+1. Implementar registro, autenticación y ciclo de vida de usuarios.
+2. Completar la integración IGDB y su caché.
+3. Añadir autorización por propietario para biblioteca y funciones sociales.
+4. Completar matchmaking persistente y gestión de partidas.
+5. Añadir tests unitarios e integración con PostgreSQL/Redis.
+6. Verificar build y empaquetado de Tauri.
+7. Documentar y validar despliegue integrado frontend/backend.
 
-This is a development prototype. Do not expose it to the public Internet or use real user data. Review authentication, authorization, CORS, WebSocket handling, secret management and dependency versions before deployment.
+## CI
 
-## License
+GitHub Actions ejecuta la verificación Maven del backend y la compilación/type-check del frontend cuando cambian sus respectivos componentes.
 
-See [LICENSE](LICENSE).
+## Licencia
+
+MIT. Consulta [LICENSE](LICENSE).
