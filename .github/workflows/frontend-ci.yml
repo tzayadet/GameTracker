@@ -1,4 +1,4 @@
-name: GameTracker frontend CI
+name: Game Library UI CI
 
 on:
   push:
