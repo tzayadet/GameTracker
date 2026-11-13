@@ -1,6 +1,9 @@
-# Game Library & Progress Tracker
+<p align="center">
+  <img src="https://img.shields.io/badge/GAME_DEV-GAME_LIBRARY_TRACKER-101010?style=for-the-badge&labelColor=050805&color=00FF41" alt="GameTracker"/>
+  <img src="https://img.shields.io/badge/JAVA-REACT_TYPESCRIPT-101010?style=for-the-badge&logo=java&logoColor=00FF41" alt="Java and React"/>
+</p>
 
-**Project:** GameTracker
+# Game Library & Progress Tracker
 
 [![Backend CI](https://github.com/tzayadet/GameTracker/actions/workflows/backend-ci.yml/badge.svg)](https://github.com/tzayadet/GameTracker/actions/workflows/backend-ci.yml) [![Frontend CI](https://github.com/tzayadet/GameTracker/actions/workflows/frontend-ci.yml/badge.svg)](https://github.com/tzayadet/GameTracker/actions/workflows/frontend-ci.yml) [![GitHub Pages](https://github.com/tzayadet/GameTracker/actions/workflows/static.yml/badge.svg)](https://github.com/tzayadet/GameTracker/actions/workflows/static.yml)
 
